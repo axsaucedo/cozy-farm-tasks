@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { GameState, Task, FarmItem } from '@/types/game';
+import { useDebug } from '@/contexts/DebugContext';
 
 const INITIAL_GAME_STATE: GameState = {
   points: 100, // Starting points to buy first items
@@ -13,6 +14,7 @@ const INITIAL_GAME_STATE: GameState = {
 };
 
 export const useGameState = () => {
+  const { flags } = useDebug();
   const [gameState, setGameState] = useState<GameState>(() => {
     const saved = localStorage.getItem('farmTodoGameState');
     return saved ? JSON.parse(saved) : INITIAL_GAME_STATE;
@@ -96,11 +98,13 @@ export const useGameState = () => {
       ...prev,
       farmItems: prev.farmItems.map(item => {
         if (item.stage === 'growing' && item.plantedAt && item.wateringInterval) {
-          const hoursSinceWatering = item.lastWatered 
-            ? (now.getTime() - item.lastWatered.getTime()) / (1000 * 60 * 60)
-            : (now.getTime() - item.plantedAt.getTime()) / (1000 * 60 * 60);
+          // Use minutes instead of hours when fast watering debug flag is enabled
+          const timeUnit = flags.fastWatering ? (1000 * 60) : (1000 * 60 * 60); // minutes vs hours
+          const timeSinceWatering = item.lastWatered 
+            ? (now.getTime() - item.lastWatered.getTime()) / timeUnit
+            : (now.getTime() - item.plantedAt.getTime()) / timeUnit;
           
-          if (hoursSinceWatering >= item.wateringInterval) {
+          if (timeSinceWatering >= item.wateringInterval) {
             return { ...item, lastWatered: now };
           }
         }

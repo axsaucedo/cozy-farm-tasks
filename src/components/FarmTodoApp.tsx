@@ -3,6 +3,7 @@ import { useGameState } from '@/hooks/useGameState';
 import { TaskManager } from '@/components/TaskManager';
 import { FarmStore } from '@/components/FarmStore';
 import { FarmGrid } from '@/components/FarmGrid';
+import { DebugPanel } from '@/components/DebugPanel';
 import { StoreItem } from '@/types/game';
 import { storeItems, cropData } from '@/data/storeItems';
 import { toast } from '@/hooks/use-toast';
@@ -81,6 +82,7 @@ export const FarmTodoApp = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <DebugPanel />
       {/* Hero Section */}
       <div 
         className="relative h-48 bg-cover bg-center"
