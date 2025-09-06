@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { FarmItem, StoreItem } from '@/types/game';
-import { cropData } from '@/data/storeItems';
+import { cropData, storeItems } from '@/data/storeItems';
 
 interface FarmGridProps {
   farmItems: FarmItem[];
@@ -34,26 +34,29 @@ export const FarmGrid = ({ farmItems, selectedItem, onPlaceItem, onHarvestCrop }
     const item = farmItems.find(item => item.x === x && item.y === y);
     if (!item) return null;
 
-    // For crops, show growth stage
+    // Find the store item to get the correct icon
+    const storeItem = storeItems.find(storeItem => storeItem.id === item.storeItemId);
+    if (!storeItem) return null;
+
+    // For crops, show different stages based on growth
     if (item.storeItemId in cropData) {
-      const crop = cropData[item.storeItemId as keyof typeof cropData];
       if (item.stage === 'ready') {
         return (
           <div className="text-2xl animate-pulse cursor-pointer" title="Click to harvest!">
-            {crop.stages[crop.stages.length - 1]}
+            {storeItem.image}
           </div>
         );
       } else if (item.stage === 'growing') {
         return (
           <div className="text-xl">
-            {crop.stages[0]}
+            🌱
           </div>
         );
       }
     }
 
-    // For decorations and tools, show the item image
-    return <div className="text-2xl">{item.storeItemId === 'scarecrow' ? '🎃' : item.storeItemId === 'flower-bed' ? '🌸' : '🪵'}</div>;
+    // For decorations and tools, show the store item image
+    return <div className="text-2xl">{storeItem.image}</div>;
   };
 
   const getCellStyle = (x: number, y: number) => {
