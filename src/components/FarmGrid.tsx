@@ -35,11 +35,14 @@ export const FarmGrid = ({ farmItems, selectedItem, onPlaceItem, onHarvestCrop }
     if (!item) return null;
 
     // Find the store item to get the correct icon
-    const storeItem = storeItems.find(storeItem => storeItem.id === item.storeItemId);
-    if (!storeItem) return null;
+    const storeItem = storeItems.find(si => si.id === item.storeItemId);
+    if (!storeItem) {
+      console.warn(`Store item not found for storeItemId: ${item.storeItemId}`);
+      return null;
+    }
 
     // For crops, show different stages based on growth
-    if (item.storeItemId in cropData) {
+    if (storeItem.type === 'crop') {
       if (item.stage === 'ready') {
         return (
           <div className="text-2xl animate-pulse cursor-pointer" title="Click to harvest!">
@@ -48,15 +51,19 @@ export const FarmGrid = ({ farmItems, selectedItem, onPlaceItem, onHarvestCrop }
         );
       } else if (item.stage === 'growing') {
         return (
-          <div className="text-xl">
+          <div className="text-xl" title={`Growing ${storeItem.name}...`}>
             🌱
           </div>
         );
       }
     }
 
-    // For decorations and tools, show the store item image
-    return <div className="text-2xl">{storeItem.image}</div>;
+    // For decorations and tools, always show the store item image
+    return (
+      <div className="text-2xl" title={storeItem.name}>
+        {storeItem.image}
+      </div>
+    );
   };
 
   const getCellStyle = (x: number, y: number) => {
