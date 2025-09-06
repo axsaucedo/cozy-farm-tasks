@@ -61,7 +61,23 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				farm: {
+					earth: 'hsl(var(--farm-earth))',
+					grass: 'hsl(var(--farm-grass))',
+					sun: 'hsl(var(--farm-sun))',
+					water: 'hsl(var(--farm-water))',
+					harvest: 'hsl(var(--farm-harvest))'
 				}
+			},
+			backgroundImage: {
+				'gradient-farm': 'var(--gradient-farm)',
+				'gradient-earth': 'var(--gradient-earth)',
+				'gradient-sky': 'var(--gradient-sky)'
+			},
+			boxShadow: {
+				'farm': 'var(--shadow-farm)',
+				'glow': 'var(--shadow-glow)'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
